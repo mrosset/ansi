@@ -1,7 +1,7 @@
 include $(GOROOT)/src/Make.inc
 
-TARG=fixme
-GOFILES=fixme
+TARG=skel
+GOFILES=skel.go
 GOFMT=gofmt -l -w
 
 include $(GOROOT)/src/Make.cmd
