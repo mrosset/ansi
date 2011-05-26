@@ -6,7 +6,7 @@ GOFMT=gofmt -l -w
 
 include $(GOROOT)/src/Make.cmd
 
-test: format clean all
+test: format all
 	./${TARG}
 
 format:
