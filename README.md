@@ -17,6 +17,6 @@ Example
     )
 
     func main() {
-        fmt.Printf("%s",color.Blue("techno color\n"))
+        fmt.Printf("%s\n",color.Blue("techno color"))
     }
 ```
