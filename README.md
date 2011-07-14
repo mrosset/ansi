@@ -13,10 +13,10 @@ Example
 
     import (
         "fmt"
-        color "github.com/str1ngs/go-ansi/color"
+        . "github.com/str1ngs/go-ansi/color"
     )
 
     func main() {
-        fmt.Printf("%s\n",color.Blue("techno color"))
+        fmt.Printf("%s\n", Blue("techno color"))
     }
 ```
