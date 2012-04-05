@@ -5,15 +5,17 @@ import (
 	"testing"
 )
 
-var attributes = []Color{
+var attributes = []*Escape{
 	Bold("bold"),
-	Underscore("underscore"),
 	Dark("dark"),
 	Italic("italic"),
+	Underline("underscore"),
 	Blink("blink"),
+	Reverse("dark"),
+	Concealed("italic"),
 }
 
-var foreground = []Color{
+var foreground = []*Escape{
 	Black("black"),
 	Red("red"),
 	Green("green"),
@@ -23,36 +25,56 @@ var foreground = []Color{
 	White("white"),
 }
 
-var background = []Color{
-	BgBlack("black"),
+var background = []*Escape{
+	BgGrey("grey"),
 	BgRed("red"),
+	BgCyan("green"),
+	BgYellow("yellow"),
+	BgBlue("blue"),
+	BgMagenta("magenta"),
 	BgCyan("cyan"),
 	BgWhite("white"),
 }
 
+var composed = []*Escape{
+	Red("red"),
+	Bold(Red("bold red")),
+	BgGreen(Blue("blue on white background")),
+	Underline(Blink(Magenta("magenta blinking underlined text"))),
+}
+
 func TestAttributes(t *testing.T) {
-	fmt.Println(Underscore("Attributes"))
+	fmt.Println(Underline("Attributes"))
 	fmt.Println()
 	for _, a := range attributes {
 		fmt.Printf("%s\n", a)
 	}
-	fmt.Println("")
+	fmt.Println("----------------")
 }
 
 func TestForeground(t *testing.T) {
-	fmt.Println(Underscore("Foreground"))
+	fmt.Println(Underline("Foreground"))
 	fmt.Println()
 	for _, a := range foreground {
 		fmt.Printf("%s\n", a)
 	}
-	fmt.Println("")
+	fmt.Println("----------------")
 }
 
 func TestBackground(t *testing.T) {
-	fmt.Println(Underscore("Background"))
+	fmt.Println(Underline("Background"))
 	fmt.Println()
 	for _, a := range background {
 		fmt.Printf("%s\n", a)
 	}
-	fmt.Println("")
+	fmt.Println("----------------")
+}
+
+func TestComposed(t *testing.T) {
+	fmt.Println(Underline("Composed"))
+	fmt.Println()
+	for _, a := range composed {
+		fmt.Printf("%s\n", a)
+	}
+	fmt.Println("----------------")
 }

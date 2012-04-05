@@ -4,16 +4,19 @@ import (
 	"fmt"
 )
 
-const escape = "\x1b[00;0;%vm%s\x1b[m"
+// The old escape sequence was FUBAR
+const escapeSeq = "\x1b[%vm%s\x1b[0m"
 
 // Text Attributes
 const (
-	RESET = iota
-	BOLD
+	BOLD = iota + 1
 	DARK
 	ITALIC
-	UNDERSCORE
+	UNDERLINE
 	BLINK
+	_
+	REVERSE
+	CONCEALED
 )
 
 // Foreground colors
@@ -30,130 +33,146 @@ const (
 
 // Background Colors 
 const (
-	BG_BLACK = iota + 40
-	BG_RED   = 41
-	BG_CYAN  = 46
-	BG_WHITE = 47
+	BG_GREY = iota + 40
+	BG_RED
+	BG_GREEN
+	BG_YELLOW
+	BG_BLUE
+	BG_MAGENTA
+	BG_CYAN
+	BG_WHITE
 )
 
-
-func ansi(code int, s string) string {
-	return fmt.Sprintf(escape, code, s)
+type escaper interface {
+	fmt.Formatter
+	fmt.Stringer
 }
 
-type Color interface {
-	Format(fmt.State, int)
+type Escape struct {
+	code      int
+	escapeStr escaper
 }
 
-// Test Attribute Types
-type Reset string
+func newColor(code int, escapeOrStr interface{}) *Escape {
+	switch s := escapeOrStr.(type) {
+	case *Escape:
+		return &Escape{code, s}
+	case string:
+		return &Escape{code, rawString(s)}
+	}
 
-func (r Reset) Format(s fmt.State, c int) {
-	fmt.Fprintf(s, escape, RESET, string(r))
+	panic(fmt.Sprintf("bad value: %v", escapeOrStr))
 }
 
-type Bold string
-
-func (r Bold) Format(s fmt.State, c int) {
-	fmt.Fprintf(s, escape, BOLD, string(r))
+func (clr *Escape) Format(s fmt.State, c rune) {
+	fmt.Fprintf(s, clr.String())
 }
 
-type Dark string
-
-func (r Dark) Format(s fmt.State, c int) {
-	fmt.Fprintf(s, escape, DARK, string(r))
+func (clr *Escape) String() string {
+	return fmt.Sprintf(escapeSeq, clr.code, fmt.Sprintf("%s", clr.escapeStr))
 }
 
-type Italic string
+type rawString string
 
-func (r Italic) Format(s fmt.State, c int) {
-	fmt.Fprintf(s, escape, ITALIC, string(r))
+func (rs rawString) Format(s fmt.State, c rune) {
+	fmt.Fprintf(s, rs.String())
 }
 
-type Underscore string
-
-func (r Underscore) Format(s fmt.State, c int) {
-	fmt.Fprintf(s, escape, UNDERSCORE, string(r))
+func (rs rawString) String() string {
+	return string(rs)
 }
 
-type Blink string
-
-func (r Blink) Format(s fmt.State, c int) {
-	fmt.Fprintf(s, escape, BLINK, string(r))
+// Terminal color escape sequences
+func Black(cs interface{}) *Escape {
+	return newColor(BLACK, cs)
 }
 
-type Black string
-
-func (r Black) Format(s fmt.State, c int) {
-	fmt.Fprintf(s, escape, BLACK, string(r))
+func Red(cs interface{}) *Escape {
+	return newColor(RED, cs)
 }
 
-
-// Foreground Types
-type Red string
-
-func (r Red) Format(s fmt.State, c int) {
-	fmt.Fprintf(s, escape, RED, string(r))
+func Green(cs interface{}) *Escape {
+	return newColor(GREEN, cs)
 }
 
-type Green string
-
-func (r Green) Format(s fmt.State, c int) {
-	fmt.Fprintf(s, escape, GREEN, string(r))
+func Yellow(cs interface{}) *Escape {
+	return newColor(YELLOW, cs)
 }
 
-type Yellow string
-
-func (r Yellow) Format(s fmt.State, c int) {
-	fmt.Fprintf(s, escape, YELLOW, string(r))
+func Blue(cs interface{}) *Escape {
+	return newColor(BLUE, cs)
 }
 
-type Blue string
-
-func (r Blue) Format(s fmt.State, c int) {
-	fmt.Fprintf(s, escape, BLUE, string(r))
+func Magenta(cs interface{}) *Escape {
+	return newColor(MAGENTA, cs)
 }
 
-type Magenta string
-
-func (r Magenta) Format(s fmt.State, c int) {
-	fmt.Fprintf(s, escape, MAGENTA, string(r))
+func Cyan(cs interface{}) *Escape {
+	return newColor(CYAN, cs)
 }
 
-type Cyan string
-
-func (r Cyan) Format(s fmt.State, c int) {
-	fmt.Fprintf(s, escape, CYAN, string(r))
+func White(cs interface{}) *Escape {
+	return newColor(WHITE, cs)
 }
 
-type White string
-
-func (r White) Format(s fmt.State, c int) {
-	fmt.Fprintf(s, escape, WHITE, string(r))
+// Terminal background color escape sequences
+func BgGrey(cs interface{}) *Escape {
+	return newColor(BG_GREY, cs)
 }
 
-
-// Background Types
-type BgBlack string
-
-func (r BgBlack) Format(s fmt.State, c int) {
-	fmt.Fprintf(s, escape, BG_BLACK, string(r))
+func BgRed(cs interface{}) *Escape {
+	return newColor(BG_RED, cs)
 }
 
-type BgRed string
-
-func (r BgRed) Format(s fmt.State, c int) {
-	fmt.Fprintf(s, escape, BG_RED, string(r))
+func BgGreen(cs interface{}) *Escape {
+	return newColor(BG_GREEN, cs)
 }
 
-type BgWhite string
-
-func (r BgWhite) Format(s fmt.State, c int) {
-	fmt.Fprintf(s, escape, BG_WHITE, string(r))
+func BgYellow(cs interface{}) *Escape {
+	return newColor(BG_YELLOW, cs)
 }
 
-type BgCyan string
+func BgBlue(cs interface{}) *Escape {
+	return newColor(BG_BLUE, cs)
+}
 
-func (r BgCyan) Format(s fmt.State, c int) {
-	fmt.Fprintf(s, escape, BG_CYAN, string(r))
+func BgMagenta(cs interface{}) *Escape {
+	return newColor(BG_MAGENTA, cs)
+}
+
+func BgCyan(cs interface{}) *Escape {
+	return newColor(BG_CYAN, cs)
+}
+
+func BgWhite(cs interface{}) *Escape {
+	return newColor(BG_WHITE, cs)
+}
+
+// Terminal attribute escape sequences
+func Bold(cs interface{}) *Escape {
+	return newColor(BOLD, cs)
+}
+
+func Dark(cs interface{}) *Escape {
+	return newColor(DARK, cs)
+}
+
+func Italic(cs interface{}) *Escape {
+	return newColor(ITALIC, cs)
+}
+
+func Underline(cs interface{}) *Escape {
+	return newColor(UNDERLINE, cs)
+}
+
+func Blink(cs interface{}) *Escape {
+	return newColor(BLINK, cs)
+}
+
+func Reverse(cs interface{}) *Escape {
+	return newColor(REVERSE, cs)
+}
+
+func Concealed(cs interface{}) *Escape {
+	return newColor(CONCEALED, cs)
 }
