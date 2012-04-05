@@ -7,8 +7,8 @@ import (
 
 var attributes = []*Escape{
 	Bold("bold"),
-    Dark("dark"),
-    Italic("italic"),
+	Dark("dark"),
+	Italic("italic"),
 	Underline("underscore"),
 	Blink("blink"),
 	Reverse("dark"),
@@ -29,18 +29,18 @@ var background = []*Escape{
 	BgGrey("grey"),
 	BgRed("red"),
 	BgCyan("green"),
-    BgYellow("yellow"),
-    BgBlue("blue"),
-    BgMagenta("magenta"),
-    BgCyan("cyan"),
+	BgYellow("yellow"),
+	BgBlue("blue"),
+	BgMagenta("magenta"),
+	BgCyan("cyan"),
 	BgWhite("white"),
 }
 
 var composed = []*Escape{
-    Red("red"),
-    Bold(Red("bold red")),
-    BgGreen(Blue("blue on white background")),
-    Underline(Blink(Magenta("magenta blinking underlined text"))),
+	Red("red"),
+	Bold(Red("bold red")),
+	BgGreen(Blue("blue on white background")),
+	Underline(Blink(Magenta("magenta blinking underlined text"))),
 }
 
 func TestAttributes(t *testing.T) {
@@ -78,4 +78,3 @@ func TestComposed(t *testing.T) {
 	}
 	fmt.Println("----------------")
 }
-
