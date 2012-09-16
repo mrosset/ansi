@@ -13,7 +13,7 @@ Example
 
     import (
         "fmt"
-        . "github.com/str1ngs/go-ansi/color"
+        . "github.com/str1ngs/ansi/color"
     )
 
     func main() {
