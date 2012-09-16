@@ -4,7 +4,7 @@ go-ansi
 Installing
 -------
 ```shell
-    $ go get github.com/str1ngs/go-ansi/color
+    $ go get github.com/str1ngs/ansi/color
 ```
 Example
 -------
