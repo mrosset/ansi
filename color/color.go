@@ -29,9 +29,11 @@ const (
 	MAGENTA
 	CYAN
 	WHITE
+	_
+	DEFAULT
 )
 
-// Background Colors 
+// Background Colors
 const (
 	BG_GREY = iota + 40
 	BG_RED
@@ -41,6 +43,8 @@ const (
 	BG_MAGENTA
 	BG_CYAN
 	BG_WHITE
+	_
+	BG_DEFAULT
 )
 
 type escaper interface {
@@ -115,6 +119,10 @@ func White(cs interface{}) *Escape {
 	return newColor(WHITE, cs)
 }
 
+func Default(cs interface{}) *Escape {
+	return newColor(DEFAULT, cs)
+}
+
 // Terminal background color escape sequences
 func BgGrey(cs interface{}) *Escape {
 	return newColor(BG_GREY, cs)
@@ -146,6 +154,10 @@ func BgCyan(cs interface{}) *Escape {
 
 func BgWhite(cs interface{}) *Escape {
 	return newColor(BG_WHITE, cs)
+}
+
+func BgDefault(cs interface{}) *Escape {
+	return newColor(BG_DEFAULT, cs)
 }
 
 // Terminal attribute escape sequences
