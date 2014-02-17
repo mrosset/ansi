@@ -28,11 +28,13 @@
 package color
 
 import "fmt"
+import "strings"
 
 // --- EXPORTED ---
 
-func Printf(color string, format string, a ...interface{}) {
-	// TODO implement
+func Printf(colorCode string, format string, a ...interface{}) {
+	colored := colourText(colorCode, format)
+	fmt.Printf(colored, a...)
 }
 
 // --- INTERNAL ONLY ---
@@ -44,36 +46,41 @@ func colourText(colorCode string, text string) string{
 	if len(colorCode) < 1 {
 		return text // nothing to do
 	}
+	
+	text = strings.Replace(text, "%", "%%", -1)
 
 	switch colorCode[0] {
 	// foreground
-	case 'r': coloredText = fmt.Sprintf("%s", Red(text))
-	case 'g': coloredText = fmt.Sprintf("%s", Green(text))
-	case 'y': coloredText = fmt.Sprintf("%s", Yellow(text))
-	case 'b': coloredText = fmt.Sprintf("%s", Blue(text))
-	case 'x': coloredText = fmt.Sprintf("%s", Black(text))
-	case 'm': coloredText = fmt.Sprintf("%s", Magenta(text))
-	case 'c': coloredText = fmt.Sprintf("%s", Cyan(text))
-	case 'w': coloredText = fmt.Sprintf("%s", White(text))
+	case 'r': coloredText = Red(text).String()
+	case 'g': coloredText = Green(text).String()
+	case 'y': coloredText = Yellow(text).String()
+	case 'b': coloredText = Blue(text).String()
+	case 'x': coloredText = Black(text).String()
+	case 'm': coloredText = Magenta(text).String()
+	case 'c': coloredText = Cyan(text).String()
+	case 'w': coloredText = White(text).String()
 	// background
-	case 'R': coloredText = fmt.Sprintf("%s", BgRed(text))
-	case 'G': coloredText = fmt.Sprintf("%s", BgGreen(text))
-	case 'Y': coloredText = fmt.Sprintf("%s", BgYellow(text))
-	case 'B': coloredText = fmt.Sprintf("%s", BgBlue(text))
-	// case 'X': coloredText = fmt.Sprintf("%s", BgBlack(text)) -> not implemented
-	case 'M': coloredText = fmt.Sprintf("%s", BgMagenta(text))
-	case 'C': coloredText = fmt.Sprintf("%s", BgCyan(text))
-	case 'W': coloredText = fmt.Sprintf("%s", BgWhite(text))
+	case 'R': coloredText = BgRed(text).String()
+	case 'G': coloredText = BgGreen(text).String()
+	case 'Y': coloredText = BgYellow(text).String()
+	case 'B': coloredText = BgBlue(text).String()
+	// case 'X': -> not implemented
+	case 'M': coloredText = BgMagenta(text).String()
+	case 'C': coloredText = BgCyan(text).String()
+	case 'W': coloredText = BgWhite(text).String()
 	// specials
-	case '+': coloredText = fmt.Sprintf("%s", Bold(text))
-	case '*': coloredText = fmt.Sprintf("%s", Italic(text))
-	case '~': coloredText = fmt.Sprintf("%s", Reverse(text))
-	case '_': coloredText = fmt.Sprintf("%s", Underline(text))
-	case '#': coloredText = fmt.Sprintf("%s", Blink(text))
-	case '?': coloredText = fmt.Sprintf("%s", Concealed(text))
-	// default -> nothing
-	default: coloredText = text
+	case '+': coloredText = Bold(text).String()
+	case '*': coloredText = Italic(text).String()
+	case '~': coloredText = Reverse(text).String()
+	case '_': coloredText = Underline(text).String()
+	case '#': coloredText = Blink(text).String()
+	case '?': coloredText = Concealed(text).String()
+	// default -> panic
+	default: panic("unknown color code")
 	}
+
+	coloredText = strings.Replace(coloredText, "%%", "%", -1)
+
 
 	return colourText(colorCode[1:], coloredText)
 }

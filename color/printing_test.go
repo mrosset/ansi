@@ -211,3 +211,8 @@ func TestReverse(t *testing.T) {
 		t.Fail()
 	}
 }
+
+// printing
+func TestPrintf(t *testing.T) {
+	Printf("*r", "%s\n", "printf italic red")
+}
