@@ -216,3 +216,7 @@ func TestReverse(t *testing.T) {
 func TestPrintf(t *testing.T) {
 	Printf("*r", "%s\n", "printf italic red")
 }
+
+func TestPrint(t *testing.T) {
+	Print("+y", "print bold yellow")
+}

@@ -37,6 +37,12 @@ func Printf(colorCode string, format string, a ...interface{}) {
 	fmt.Printf(colored, a...)
 }
 
+func Print(colorCode string,  a ...interface{}){
+	colored := fmt.Sprint(a...)
+	colored = colourText(colorCode, colored)
+	fmt.Print(colored)
+}
+
 // --- INTERNAL ONLY ---
 
 // colours a text based on the given colour code
@@ -46,7 +52,7 @@ func colourText(colorCode string, text string) string{
 	if len(colorCode) < 1 {
 		return text // nothing to do
 	}
-	
+
 	text = strings.Replace(text, "%", "%%", -1)
 
 	switch colorCode[0] {
