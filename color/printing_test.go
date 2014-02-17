@@ -220,3 +220,7 @@ func TestPrintf(t *testing.T) {
 func TestPrint(t *testing.T) {
 	Print("+y", "print bold yellow")
 }
+
+func TestPrintln(t *testing.T) {
+	Print("g", "println green")
+}

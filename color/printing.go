@@ -43,6 +43,17 @@ func Print(colorCode string,  a ...interface{}){
 	fmt.Print(colored)
 }
 
+func Println(colorCode string, a ...interface{}){
+	colored := fmt.Sprint(a...)
+	Println(colored)
+}
+
+
+// returns the text colored according to the color code (exported version of colourText)
+func ColorText(colorCode string, text string) string {
+	return colourText(colorCode, text)
+}
+
 // --- INTERNAL ONLY ---
 
 // colours a text based on the given colour code
